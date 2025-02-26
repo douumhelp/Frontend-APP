@@ -1,27 +1,53 @@
 import React, { useRef, useState } from 'react';
-import { Text, TextInput, View, Image, Animated, Pressable, ScrollView } from 'react-native';
+import { Text, TextInput, View, Image, Animated, Pressable, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useFonts, Outfit_700Bold } from '@expo-google-fonts/outfit';
-import AppLoading from 'expo-app-loading';
+import { useFonts, Outfit_700Bold, Outfit_400Regular } from '@expo-google-fonts/outfit';
 import { useRouter } from 'expo-router';
 
 export default function SignIn() {
   const [fontsLoaded] = useFonts({
     Outfit_700Bold,
+    Outfit_400Regular,
   });
   const router = useRouter();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [buttonPressed, setButtonPressed] = useState(false);
+
+  // Estados dos campos
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+  // Regex para validação
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const requiredRegex = /\S+/;
+
+  const isNameValid = requiredRegex.test(name);
+  const isEmailValid = emailRegex.test(email);
+  const isPasswordValid = requiredRegex.test(password);
+  const isConfirmPasswordValid = requiredRegex.test(confirmPassword);
+  const doPasswordsMatch = password === confirmPassword;
+
+  const isFormValid =
+    isNameValid &&
+    isEmailValid &&
+    isPasswordValid &&
+    isConfirmPasswordValid &&
+    doPasswordsMatch;
+
   const handlePressIn = () => {
     setButtonPressed(true);
     Animated.spring(scaleAnim, {
-      toValue: 0.90,
+      toValue: 0.9,
       useNativeDriver: true,
     }).start();
   };
+
   const handlePressOut = () => {
     setButtonPressed(false);
     Animated.spring(scaleAnim, {
@@ -30,118 +56,183 @@ export default function SignIn() {
       useNativeDriver: true,
     }).start();
   };
+
+  const handleSignUp = () => {
+    if (!isFormValid) {
+      setAttemptedSubmit(true);
+      return;
+    }
+    router.push('/home');
+  };
+
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return (
+      <View className="flex-1 bg-white justify-center items-center">
+        <Text className="text-xl" style={{ fontFamily: 'Outfit_400Regular' }}>
+          Carregando...
+        </Text>
+      </View>
+    );
   }
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="p-4">
-        <View className="flex-1 justify-center items-center">
-          <View className="flex items-center">
-            <Image
-              source={require('../../assets/logo.png')}
-              style={{ width: 300, height: 150, marginBottom: 10, marginTop: 20}}
-            />
-            <Text 
-              style={{ fontFamily: 'Outfit_700Bold' }}
-              className="text-4xl font-bold text-black"
-            >
-              Crie sua conta
-            </Text>
-            <Text className="mt-2 text-lg text-gray-500">
-              Insira seus dados para começar
-            </Text>
-          </View>
-          <View className="mt-8 w-full px-8">
-            <View className="area-texto rounded-full flex-row items-center p-1 border border-gray-300">
-              <TextInput
-                className="campo-texto flex-1"
-                placeholder="Digite seu nome completo"
-                placeholderTextColor="#6b7280"
+    <SafeAreaView className="flex-1 bg-white ">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={3}
+        className="flex-1"
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="p-4">
+          <View className="flex-1 justify-center items-center">
+            <View className="flex items-center">
+              <Image
+                source={require('../../assets/logo.png')}
+                style={{ width: 300, height: 150, marginBottom: 10, marginTop: 20 }}
               />
-              <MaterialIcons name="account-circle" size={24} color="gray" />
+              <Text className="text-4xl font-bold text-black" style={{ fontFamily: 'Outfit_700Bold' }}>
+                Crie sua conta
+              </Text>
+              <Text className="mt-2 text-lg text-gray-500" style={{ fontFamily: 'Outfit_400Regular' }}>
+                Insira seus dados para começar
+              </Text>
             </View>
-            <View className="area-texto rounded-full flex-row items-center p-1 border border-gray-300">
-              <TextInput
-                className="campo-texto flex-1"
-                placeholder="Digite seu telefone"
-                placeholderTextColor="#6b7280"
-                keyboardType="phone-pad"
-              />
-              <MaterialIcons name="phone" size={24} color="gray" />
-            </View>
-            <View className="area-texto rounded-full flex-row items-center p-1 border border-gray-300">
-              <TextInput
-                className="campo-texto flex-1"
-                placeholder="Digite seu e-mail"
-                placeholderTextColor="#6b7280"
-                keyboardType="email-address"
-              />
-              <MaterialIcons name="mail" size={24} color="gray" />
-            </View>
-            <View className="area-texto rounded-full flex-row items-center p-1 border border-gray-300">
-              <TextInput
-                className="campo-texto flex-1"
-                placeholder="Digite sua senha"
-                placeholderTextColor="#6b7280"
-                secureTextEntry={!passwordVisible}
-              />
-              <Pressable onPress={() => setPasswordVisible(prev => !prev)}>
-                <MaterialIcons 
-                  name={passwordVisible ? "visibility" : "visibility-off"} 
-                  size={24} 
-                  color="gray" 
+            <View className="mt-8 w-full px-8">
+              {/* Nome */}
+              <View className="area-texto flex-row items-center p-1 border-gray-300">
+                <TextInput 
+                  placeholder="Digite seu nome completo"
+                  placeholderTextColor="#6b7280"
+                  className="flex-1"
+                  style={{ fontFamily: 'Outfit_400Regular' }}
+                  value={name}
+                  onChangeText={(text) => {
+                    setName(text);
+                    if (attemptedSubmit) setAttemptedSubmit(false);
+                  }}
                 />
-              </Pressable>
-            </View>
-            <View className="area-texto rounded-full flex-row items-center p-1 mb-4 border border-gray-300">
-              <TextInput
-                className="campo-texto flex-1"
-                placeholder="Confirme sua senha"
-                placeholderTextColor="#6b7280"
-                secureTextEntry={!confirmPasswordVisible}
-              />
-              <Pressable onPress={() => setConfirmPasswordVisible(prev => !prev)}>
-                <MaterialIcons 
-                  name={confirmPasswordVisible ? "visibility" : "visibility-off"} 
-                  size={24} 
-                  color="gray" 
-                />
-              </Pressable>
-            </View>
-          </View>
-          <View className="mt-8 w-full px-8">
-            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-              <Pressable
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
-                style={{
-                  backgroundColor: buttonPressed ? '#FDE018' : '#FACC15',
-                  paddingVertical: 16,
-                  borderRadius: 999,
-                  shadowColor: '#000',
-                  shadowOpacity: 0.2,
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowRadius: 4,
-                  elevation: 5,
-                }}
-              >
-                <Text className="text-center text-black text-xl font-bold">
-                  Cadastrar
+                <MaterialIcons name="account-circle" size={24} color="gray" />
+              </View>
+              {attemptedSubmit && !isNameValid && (
+                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                  Preencha seu nome completo.
                 </Text>
-              </Pressable>
-            </Animated.View>
-          </View>
-          <Text className="mt-6 text-center text-gray-500">
-            Já possui uma conta?{' '}
-            
-            <Text className="text-yellow-500 font-bold"
-            onPress={() => router.push('/routes/login')} >
-              Faça login
+              )}
+              {/* Telefone */}
+              <View className="area-texto flex-row items-center p-1 border-gray-300">
+                <TextInput
+                  placeholder="Digite seu telefone (opcional)"
+                  placeholderTextColor="#6b7280"
+                  keyboardType="phone-pad"
+                  className="flex-1"
+                  style={{ fontFamily: 'Outfit_400Regular' }}
+                  value={phone}
+                  onChangeText={setPhone}
+                />
+                <MaterialIcons name="phone" size={24} color="gray" />
+              </View>
+              {/* E-mail */}
+              <View className="area-texto flex-row items-center p-1 border-gray-300">
+                <TextInput
+                  placeholder="Digite seu e-mail"
+                  placeholderTextColor="#6b7280"
+                  keyboardType="email-address"
+                  className="flex-1"
+                  style={{ fontFamily: 'Outfit_400Regular' }}
+                  value={email}
+                  onChangeText={(text) => {
+                    setEmail(text);
+                    if (attemptedSubmit) setAttemptedSubmit(false);
+                  }}
+                />
+                <MaterialIcons name="mail" size={24} color="gray" />
+              </View>
+              {attemptedSubmit && !isEmailValid && (
+                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                  Preencha um e-mail válido.
+                </Text>
+              )}
+              {/* Senha */}
+              <View className="area-texto flex-row items-center p-1 mt-4 border-gray-300 ">
+                <TextInput
+                  placeholder="Digite sua senha"
+                  placeholderTextColor="#6b7280"
+                  secureTextEntry={!passwordVisible}
+                  className="flex-1"
+                  style={{ fontFamily: 'Outfit_400Regular' }}
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text);
+                    if (attemptedSubmit) setAttemptedSubmit(false);
+                  }}
+                />
+                <Pressable onPress={() => setPasswordVisible((prev) => !prev)}>
+                  <MaterialIcons
+                    name={passwordVisible ? 'visibility' : 'visibility-off'}
+                    size={24}
+                    color="gray"
+                  />
+                </Pressable>
+              </View>
+              {attemptedSubmit && !isPasswordValid && (
+                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                  A senha é obrigatória.
+                </Text>
+              )}
+              {/* Confirmar */}
+              <View className="area-texto flex-row items-center  mt-4 mb-4 border border-gray-300">
+                <TextInput
+                  placeholder="Confirme sua senha"
+                  placeholderTextColor="#6b7280"
+                  secureTextEntry={!passwordVisible}
+                  className="flex-1"
+                  style={{ fontFamily: 'Outfit_400Regular' }}
+                  value={confirmPassword}
+                  onChangeText={(text) => {
+                    setConfirmPassword(text);
+                    if (attemptedSubmit) setAttemptedSubmit(false);
+                  }}
+                />
+              </View>
+              {attemptedSubmit && !isConfirmPasswordValid && (
+                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                  Confirme sua senha.
+                </Text>
+              )}
+              {attemptedSubmit && isConfirmPasswordValid && !doPasswordsMatch && (
+                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                  As senhas não coincidem.
+                </Text>
+              )}
+            </View>
+            <View className="mt-8 w-full px-8">
+              <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+                <Pressable
+                  onPressIn={handlePressIn}
+                  onPressOut={handlePressOut}
+                  onPress={handleSignUp}
+                  className={`py-4 rounded-full shadow ${
+                    isFormValid ? (buttonPressed ? 'bg-[#FDE018]' : 'bg-[#FACC15]') : 'bg-[#ccc]'
+                  }`}
+                >
+                  <Text className="text-center text-black text-xl font-bold" style={{ fontFamily: 'Outfit_700Bold' }}>
+                    Próximo
+                  </Text>
+                </Pressable>
+              </Animated.View>
+            </View>
+            <Text className="mt-6 text-center text-gray-500" style={{ fontFamily: 'Outfit_400Regular' }}>
+              Já possui uma conta?{' '}
+              <Text
+                className="text-yellow-500 font-bold"
+                onPress={() => router.push('/routes/login')}
+                style={{ fontFamily: 'Outfit_700Bold' }}
+              >
+                Faça login
+              </Text>
             </Text>
-          </Text>
-        </View>
-      </ScrollView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
