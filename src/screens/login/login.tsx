@@ -3,6 +3,9 @@ import { useRef, useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useFonts, Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit';
+import axios from 'axios';
+import { AxiosError } from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Função para aplicar máscara CPF: 000.000.000-00
 const cpfMask = (value: string): string => {
@@ -86,14 +89,44 @@ export default function Login() {
       useNativeDriver: true,
     }).start();
   };
-
-  const handleLogin = () => {
+  const [loginMessage, setLoginMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);;
+  const handleLogin = async () => {
     if (!isFormValid) {
       setAttemptedSubmit(true);
       return;
     }
-    router.push('/home');
+  
+    try {
+      const response = await axios.post('http://192.168.1.171:3000/auth/login', {
+        emailOrCpf: email.trim(),
+        password,
+      });
+  
+      const { message, token } = response.data;
+  
+      
+      await AsyncStorage.setItem('authToken', token);
+  
+      setLoginMessage(message);
+      setIsSuccess(true); 
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        console.error('Erro ao fazer login:', error.response?.data || error.message);
+        setLoginMessage(error.response?.data?.message || 'Erro ao fazer login. Verifique suas credenciais.');
+      } else if (error instanceof Error) {
+        console.error('Erro inesperado:', error.message);
+        setLoginMessage('Ocorreu um erro inesperado.');
+      } else {
+        console.error('Erro desconhecido:', error);
+        setLoginMessage('Erro desconhecido ao fazer login.');
+      }
+  
+      setIsSuccess(false);
+    }
   };
+  
+  
 
   if (!fontsLoaded) {
     return (
@@ -205,6 +238,13 @@ export default function Login() {
           )}
         </View>
         <View className="mt-8 w-full px-8">
+        {loginMessage !== '' && (
+          <View className={`p-3 rounded-lg ${isSuccess ? 'bg-green-200' : 'bg-red-200'}`}>
+            <Text className={`${isSuccess ? 'text-green-700' : 'text-red-700'} text-center`} style={{ fontFamily: 'Outfit_400Regular' }}>
+              {loginMessage}
+            </Text>
+          </View>
+        )}
           <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
             <Pressable
               onPressIn={handlePressIn}
