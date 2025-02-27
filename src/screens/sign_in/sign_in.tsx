@@ -209,7 +209,7 @@ export default function SignIn() {
                 <Pressable
                   onPressIn={handlePressIn}
                   onPressOut={handlePressOut}
-                  onPress={handleSignUp}
+                  onPress={() => router.push('/routes/sign_2')}
                   className={`py-4 rounded-full shadow ${
                     isFormValid ? (buttonPressed ? 'bg-[#FDE018]' : 'bg-[#FACC15]') : 'bg-[#ccc]'
                   }`}
