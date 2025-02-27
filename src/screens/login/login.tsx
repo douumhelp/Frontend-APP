@@ -145,7 +145,6 @@ export default function Login() {
               keyboardType="email-address"
               autoCapitalize="none"
               onChangeText={(text: string) => {
-                // Se houver letras, trata como email; se não, aplica a máscara de CPF.
                 if (/[a-zA-Z]/.test(text)) {
                   setEmail(text);
                 } else {
@@ -225,15 +224,15 @@ export default function Login() {
                 className="text-center text-black text-xl font-bold"
                 style={{ fontFamily: 'Outfit_700Bold' }}
               >
-                Entrar com email ou CPF
+                Entrar
               </Text>
             </Pressable>
           </Animated.View>
         </View>
         <Text
-          className="mt-4 text-center text-gray-500"
+          className="mt-4 text-center text-black-500"
           style={{ fontFamily: 'Outfit_400Regular' }}
-          onPress={() => router.push('/routes/forgot-password')}
+          onPress={() => router.push('/routes/forgotPassword')}
         >
           Esqueceu a sua senha?
         </Text>

@@ -14,7 +14,6 @@ export default function SignIn() {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [buttonPressed, setButtonPressed] = useState(false);
 
-  // Estados dos campos
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -23,7 +22,7 @@ export default function SignIn() {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  // Regex para validação
+  
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const requiredRegex = /\S+/;
 
@@ -62,7 +61,7 @@ export default function SignIn() {
       setAttemptedSubmit(true);
       return;
     }
-    router.push('/home');
+    router.push('/routes/sign_2');
   };
 
   if (!fontsLoaded) {
