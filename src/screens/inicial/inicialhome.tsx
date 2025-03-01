@@ -1,16 +1,16 @@
-import React, { useRef } from 'react';
-import { 
-  Text, 
-  View, 
-  Image, 
-  Pressable, 
-  SafeAreaView, 
-  Animated, 
-  ScrollView 
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { useFonts, Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit';
-import { FontAwesome5 } from '@expo/vector-icons';
+import React from "react";
+import {
+  Text,
+  View,
+  Image,
+  SafeAreaView,
+  ScrollView
+} from "react-native";
+import { useRouter } from "expo-router";
+import { useFonts, Outfit_400Regular, Outfit_700Bold } from "@expo-google-fonts/outfit";
+
+import { AnimatedButton } from "../../components/inicialhome/AnimatedButton";
+import { SloganList } from "../../components/inicialhome/SloganList";
 
 export default function Home() {
   const [fontsLoaded] = useFonts({
@@ -18,27 +18,11 @@ export default function Home() {
     Outfit_700Bold,
   });
   const router = useRouter();
-  const scaleAnimEntrar = useRef(new Animated.Value(1)).current;
-  const scaleAnimCadastro = useRef(new Animated.Value(1)).current;
-
-  const handlePressIn = (scaleAnim: Animated.Value) => {
-    Animated.spring(scaleAnim, {
-      toValue: 0.95,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const handlePressOut = (scaleAnim: Animated.Value) => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-  };
 
   if (!fontsLoaded) {
     return (
       <SafeAreaView className="flex-1 bg-white justify-center items-center">
-        <Text style={{ fontFamily: 'Outfit_400Regular' }} className="text-lg text-black">
+        <Text style={{ fontFamily: "Outfit_400Regular" }} className="text-lg text-black">
           Carregando...
         </Text>
       </SafeAreaView>
@@ -55,97 +39,45 @@ export default function Home() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView 
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }} 
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: 24 }}
         className="px-2"
       >
         <View className="flex-1 justify-center items-center">
           <View className="items-center">
             <Image
-              source={require('../../assets/logoInicial.png')}
+              source={require("../../assets/logoInicial.png")}
               style={{ width: 350, height: 280 }}
               className="rounded-md"
               resizeMode="contain"
             />
             <Text
               className="text-4xl font-bold text-black mt-0"
-              style={{ fontFamily: 'Outfit_700Bold' }}
+              style={{ fontFamily: "Outfit_700Bold" }}
             >
               Bem-Vindo!
             </Text>
           </View>
 
+        
           <View className="mt-3 w-full px-4">
-            {slogans.map((slogan, index) => (
-              <View key={index} className="flex-row items-center mt-2">
-                <FontAwesome5
-                  name="check-circle"
-                  size={20}
-                  color="#FBBF24"
-                  className="mr-3"
-                />
-                <Text
-                  className="text-lg text-black"
-                  style={{ fontFamily: 'Outfit_400Regular' }}
-                >
-                  {slogan}
-                </Text>
-              </View>
-            ))}
+            <SloganList slogans={slogans} />
           </View>
 
-          <View className="mt-8 w-full px-16">
-            <Animated.View style={{ transform: [{ scale: scaleAnimEntrar }] }}>
-              <Pressable
-                onPressIn={() => handlePressIn(scaleAnimEntrar)}
-                onPressOut={() => handlePressOut(scaleAnimEntrar)}
-                onPress={() => router.push('/routes/login')}
-                style={{
-                  backgroundColor: '#FACC15',
-                  paddingVertical: 16,
-                  borderRadius: 999,
-                  shadowColor: '#000',
-                  shadowOpacity: 0.4,
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowRadius: 4,
-                  elevation: 5,
-                }}
-              >
-                <Text
-                  className="text-center text-black text-xl font-bold"
-                  style={{ fontFamily: 'Outfit_700Bold' }}
-                >
-                  Entrar
-                </Text>
-              </Pressable>
-            </Animated.View>
-          </View>
           
-          <View className="mt-3 mb-0 w-full px-16">
-            <Animated.View style={{ transform: [{ scale: scaleAnimCadastro }] }}>
-              <Pressable
-                onPressIn={() => handlePressIn(scaleAnimCadastro)}
-                onPressOut={() => handlePressOut(scaleAnimCadastro)}
-                onPress={() => router.push('/routes/signin')}
-                style={{
-                  backgroundColor: '#FDE018',
-                  paddingVertical: 16,
-                  borderRadius: 999,
-                  shadowColor: '#000',
-                  shadowOpacity: 0.4,
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowRadius: 4,
-                  elevation: 5,
-                }}
-              >
-                <Text
-                  className="text-center text-black text-xl font-bold"
-                  style={{ fontFamily: 'Outfit_700Bold' }}
-                >
-                  Cadastro
-                </Text>
-              </Pressable>
-            </Animated.View>
+          <View className="mt-8 w-full px-16">
+            <AnimatedButton
+              label="Entrar"
+              backgroundColor="#FACC15"
+              onPress={() => router.push("login")}
+            />
+          </View>
+          <View className="mb-0 w-full px-16">
+            <AnimatedButton
+              label="Cadastro"
+              backgroundColor="#FDE018"
+              onPress={() => router.push("signin")}
+            />
           </View>
         </View>
       </ScrollView>

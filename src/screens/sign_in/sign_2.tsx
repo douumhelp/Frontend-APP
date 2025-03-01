@@ -76,7 +76,7 @@ export default function CadastroPart2() {
       setAttemptedSubmit(true);
       return;
     }
-    router.push('/routes/home');
+    router.push('home');
   };
 
   if (!fontsLoaded) {

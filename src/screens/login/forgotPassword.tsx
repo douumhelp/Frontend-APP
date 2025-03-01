@@ -31,7 +31,7 @@ export default function ForgotPassword() {
     if (!isEmailValid) return;
     setShowSuccess(true);
     setTimeout(() => {
-      router.push('/routes/inicialhome');
+      router.push('inicialhome');
     }, 2000);
   };
 

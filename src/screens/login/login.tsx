@@ -52,16 +52,13 @@ export default function Login() {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  // Regex de validação de email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  // Validação que diferencia email ou CPF:
   const isEmailOrCpfValid = (() => {
     const trimmed = email.trim();
     if (trimmed === "") return false;
     if (/[a-zA-Z]/.test(trimmed)) {
       return emailRegex.test(trimmed);
     } else {
-      // Trata como CPF: remove caracteres não numéricos e valida
       const digits = trimmed.replace(/\D/g, '');
       return validateCPF(digits);
     }
@@ -232,7 +229,7 @@ export default function Login() {
         <Text
           className="mt-4 text-center text-black-500"
           style={{ fontFamily: 'Outfit_400Regular' }}
-          onPress={() => router.push('/routes/forgotPassword')}
+          onPress={() => router.push('forgotPassword')}
         >
           Esqueceu a sua senha?
         </Text>
@@ -243,7 +240,7 @@ export default function Login() {
           Não tem conta?{' '}
           <Text
             className="text-yellow-500 font-bold"
-            onPress={() => router.push('/routes/signin')}
+            onPress={() => router.push('signin')}
             style={{ fontFamily: 'Outfit_700Bold' }}
           >
             Crie agora!

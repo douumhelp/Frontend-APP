@@ -22,7 +22,6 @@ export default function SignIn() {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const requiredRegex = /\S+/;
 
@@ -61,7 +60,7 @@ export default function SignIn() {
       setAttemptedSubmit(true);
       return;
     }
-    router.push('/routes/sign_2');
+    router.push('sign_2');
   };
 
   if (!fontsLoaded) {
@@ -75,14 +74,17 @@ export default function SignIn() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white ">
+    <SafeAreaView className="flex-1 bg-white">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={3}
         className="flex-1"
       >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="p-4">
-          <View className="flex-1 justify-center items-center">
+        <ScrollView 
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} 
+          className="p-4"
+        >
+          <View className="flex-1 items-center">
             <View className="flex items-center">
               <Image
                 source={require('../../assets/logo.png')}
@@ -96,7 +98,6 @@ export default function SignIn() {
               </Text>
             </View>
             <View className="mt-8 w-full px-8">
-              {/* Nome */}
               <View className="area-texto flex-row items-center p-1 border-gray-300">
                 <TextInput 
                   placeholder="Digite seu nome completo"
@@ -116,7 +117,7 @@ export default function SignIn() {
                   Preencha seu nome completo.
                 </Text>
               )}
-              {/* Telefone */}
+
               <View className="area-texto flex-row items-center p-1 border-gray-300">
                 <TextInput
                   placeholder="Digite seu telefone (opcional)"
@@ -129,7 +130,7 @@ export default function SignIn() {
                 />
                 <MaterialIcons name="phone" size={24} color="gray" />
               </View>
-              {/* E-mail */}
+
               <View className="area-texto flex-row items-center p-1 border-gray-300">
                 <TextInput
                   placeholder="Digite seu e-mail"
@@ -150,8 +151,8 @@ export default function SignIn() {
                   Preencha um e-mail válido.
                 </Text>
               )}
-              {/* Senha */}
-              <View className="area-texto flex-row items-center p-1 mt-4 border-gray-300 ">
+
+              <View className="area-texto flex-row items-center p-1 mt-4 border-gray-300">
                 <TextInput
                   placeholder="Digite sua senha"
                   placeholderTextColor="#6b7280"
@@ -177,8 +178,8 @@ export default function SignIn() {
                   A senha é obrigatória.
                 </Text>
               )}
-              {/* Confirmar */}
-              <View className="area-texto flex-row items-center  mt-4 mb-4 border border-gray-300">
+
+              <View className="area-texto flex-row items-center mt-4 border border-gray-300">
                 <TextInput
                   placeholder="Confirme sua senha"
                   placeholderTextColor="#6b7280"
@@ -193,17 +194,29 @@ export default function SignIn() {
                 />
               </View>
               {attemptedSubmit && !isConfirmPasswordValid && (
-                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                <Text className="text-red-500 text-xs mt-1 mb-3" style={{ fontFamily: 'Outfit_400Regular' }}>
                   Confirme sua senha.
                 </Text>
               )}
               {attemptedSubmit && isConfirmPasswordValid && !doPasswordsMatch && (
-                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                <Text className="text-red-500 text-xs mt-1 mb-3" style={{ fontFamily: 'Outfit_400Regular' }}>
                   As senhas não coincidem.
                 </Text>
               )}
             </View>
-            <View className="mt-8 w-full px-8">
+
+            <Text className="text-center text-gray-500" style={{ fontFamily: 'Outfit_400Regular' }}>
+              Já possui uma conta?{' '}
+              <Text
+                className="text-yellow-500 font-bold"
+                onPress={() => router.push('login')}
+                style={{ fontFamily: 'Outfit_700Bold' }}
+              >
+                Faça login
+              </Text>
+            </Text>
+
+            <View className="mt-3 w-full px-8">
               <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
                 <Pressable
                   onPressIn={handlePressIn}
@@ -219,16 +232,6 @@ export default function SignIn() {
                 </Pressable>
               </Animated.View>
             </View>
-            <Text className="mt-6 text-center text-gray-500" style={{ fontFamily: 'Outfit_400Regular' }}>
-              Já possui uma conta?{' '}
-              <Text
-                className="text-yellow-500 font-bold"
-                onPress={() => router.push('/routes/login')}
-                style={{ fontFamily: 'Outfit_700Bold' }}
-              >
-                Faça login
-              </Text>
-            </Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
