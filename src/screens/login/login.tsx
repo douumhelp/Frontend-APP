@@ -3,6 +3,9 @@ import { useRef, useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useFonts, Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit';
+import axios from 'axios';
+import { AxiosError } from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Função para aplicar máscara CPF: 000.000.000-00
 const cpfMask = (value: string): string => {
@@ -48,7 +51,7 @@ export default function Login() {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [buttonPressed, setButtonPressed] = useState(false);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [hashPassword, setPassword] = useState('');
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -64,7 +67,7 @@ export default function Login() {
     }
   })();
 
-  const isPasswordValid = password.length > 0;
+  const isPasswordValid = hashPassword.length > 0;
   const isFormValid = isEmailOrCpfValid && isPasswordValid;
 
   const handlePressIn = () => {
@@ -83,14 +86,46 @@ export default function Login() {
       useNativeDriver: true,
     }).start();
   };
+  const [loginMessage, setLoginMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);;
 
-  const handleLogin = () => {
+  const apiUrl = "http://192.168.15.120:3000"
+  const handleLogin = async () => {
     if (!isFormValid) {
       setAttemptedSubmit(true);
       return;
     }
-    router.push('/home');
+  
+    try {
+      const response = await axios.post(`${apiUrl}/auth/login`, {
+        email: email.trim(),
+        hashPassword,
+      });
+  
+      const { message, token } = response.data;
+  
+      await AsyncStorage.setItem('authToken', token);
+  
+      setLoginMessage(message);
+      setIsSuccess(true); 
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        console.error('Erro ao fazer login:', error.response?.data || error.message);
+        setLoginMessage(error.response?.data?.message || 'Erro ao fazer login. Verifique suas credenciais.');
+      } else if (error instanceof Error) {
+        console.error('Erro inesperado:', error.message);
+        setLoginMessage('Ocorreu um erro inesperado.');
+      } else {
+        console.error('Erro desconhecido:', error);
+        setLoginMessage('Erro desconhecido ao fazer login.');
+      }
+  
+      setIsSuccess(false);
+    }
   };
+  
+  
+  
 
   if (!fontsLoaded) {
     return (
@@ -180,7 +215,7 @@ export default function Login() {
                 setPassword(text);
                 if (attemptedSubmit) setAttemptedSubmit(false);
               }}
-              value={password}
+              value={hashPassword}
               style={{ fontFamily: 'Outfit_400Regular' }}
             />
             <Pressable onPress={() => setPasswordVisible(prev => !prev)}>
@@ -201,6 +236,13 @@ export default function Login() {
           )}
         </View>
         <View className="mt-8 w-full px-8">
+        {loginMessage !== '' && (
+          <View className={`p-3 rounded-lg ${isSuccess ? 'bg-green-200' : 'bg-red-200'}`}>
+            <Text className={`${isSuccess ? 'text-green-700' : 'text-red-700'} text-center`} style={{ fontFamily: 'Outfit_400Regular' }}>
+              {loginMessage}
+            </Text>
+          </View>
+        )}
           <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
             <Pressable
               onPressIn={handlePressIn}
