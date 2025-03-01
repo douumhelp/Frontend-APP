@@ -51,7 +51,7 @@ export default function Login() {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [buttonPressed, setButtonPressed] = useState(false);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [hashPassword, setPassword] = useState('');
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -70,7 +70,7 @@ export default function Login() {
     }
   })();
 
-  const isPasswordValid = password.length > 0;
+  const isPasswordValid = hashPassword.length > 0;
   const isFormValid = isEmailOrCpfValid && isPasswordValid;
 
   const handlePressIn = () => {
@@ -91,6 +91,8 @@ export default function Login() {
   };
   const [loginMessage, setLoginMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);;
+
+  const apiUrl = "http://192.168.15.120:3000"
   const handleLogin = async () => {
     if (!isFormValid) {
       setAttemptedSubmit(true);
@@ -98,14 +100,13 @@ export default function Login() {
     }
   
     try {
-      const response = await axios.post('http://192.168.1.171:3000/auth/login', {
-        emailOrCpf: email.trim(),
-        password,
+      const response = await axios.post(`${apiUrl}/auth/login`, {
+        email: email.trim(),
+        hashPassword,
       });
   
       const { message, token } = response.data;
   
-      
       await AsyncStorage.setItem('authToken', token);
   
       setLoginMessage(message);
@@ -125,6 +126,7 @@ export default function Login() {
       setIsSuccess(false);
     }
   };
+  
   
   
 
@@ -217,7 +219,7 @@ export default function Login() {
                 setPassword(text);
                 if (attemptedSubmit) setAttemptedSubmit(false);
               }}
-              value={password}
+              value={hashPassword}
               style={{ fontFamily: 'Outfit_400Regular' }}
             />
             <Pressable onPress={() => setPasswordVisible(prev => !prev)}>
