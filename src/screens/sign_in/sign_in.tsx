@@ -10,11 +10,13 @@ export default function SignIn() {
     Outfit_700Bold,
     Outfit_400Regular,
   });
+
   const router = useRouter();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [buttonPressed, setButtonPressed] = useState(false);
 
   const [name, setName] = useState('');
+  const [surname, setSurname] = useState(''); // Novo state para o sobrenome
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,6 +28,7 @@ export default function SignIn() {
   const requiredRegex = /\S+/;
 
   const isNameValid = requiredRegex.test(name);
+  const isSurnameValid = requiredRegex.test(surname); // Validação do sobrenome
   const isEmailValid = emailRegex.test(email);
   const isPasswordValid = requiredRegex.test(password);
   const isConfirmPasswordValid = requiredRegex.test(confirmPassword);
@@ -33,6 +36,7 @@ export default function SignIn() {
 
   const isFormValid =
     isNameValid &&
+    isSurnameValid && // Inclui o sobrenome na validação do formulário
     isEmailValid &&
     isPasswordValid &&
     isConfirmPasswordValid &&
@@ -80,10 +84,7 @@ export default function SignIn() {
         keyboardVerticalOffset={3}
         className="flex-1"
       >
-        <ScrollView 
-          contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} 
-          className="p-4"
-        >
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }} className="p-4">
           <View className="flex-1 items-center">
             <View className="flex items-center">
               <Image
@@ -97,10 +98,12 @@ export default function SignIn() {
                 Insira seus dados para começar
               </Text>
             </View>
+
             <View className="mt-8 w-full px-8">
+              {/* Campo Nome */}
               <View className="area-texto flex-row items-center p-1 border-gray-300">
                 <TextInput 
-                  placeholder="Digite seu nome completo"
+                  placeholder="Nome"
                   placeholderTextColor="#6b7280"
                   className="flex-1"
                   style={{ fontFamily: 'Outfit_400Regular' }}
@@ -114,11 +117,33 @@ export default function SignIn() {
               </View>
               {attemptedSubmit && !isNameValid && (
                 <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
-                  Preencha seu nome completo.
+                  Campo obrigatório.
                 </Text>
               )}
 
-              <View className="area-texto flex-row items-center p-1 border-gray-300">
+              {/* Campo Sobrenome */}
+              <View className="area-texto flex-row items-center p-1 border-gray-300 mt-2">
+                <TextInput 
+                  placeholder="Sobrenome"
+                  placeholderTextColor="#6b7280"
+                  className="flex-1"
+                  style={{ fontFamily: 'Outfit_400Regular' }}
+                  value={surname}
+                  onChangeText={(text) => {
+                    setSurname(text);
+                    if (attemptedSubmit) setAttemptedSubmit(false);
+                  }}
+                />
+                <MaterialIcons name="account-circle" size={24} color="gray" />
+              </View>
+              {attemptedSubmit && !isSurnameValid && (
+                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                  Campo obrigatório.
+                </Text>
+              )}
+
+              {/* Telefone */}
+              <View className="area-texto flex-row items-center p-1 border-gray-300 mt-2">
                 <TextInput
                   placeholder="Digite seu telefone (opcional)"
                   placeholderTextColor="#6b7280"
@@ -131,7 +156,8 @@ export default function SignIn() {
                 <MaterialIcons name="phone" size={24} color="gray" />
               </View>
 
-              <View className="area-texto flex-row items-center p-1 border-gray-300">
+              {/* E-mail */}
+              <View className="area-texto flex-row items-center p-1 border-gray-300 mt-2">
                 <TextInput
                   placeholder="Digite seu e-mail"
                   placeholderTextColor="#6b7280"
@@ -152,6 +178,7 @@ export default function SignIn() {
                 </Text>
               )}
 
+              {/* Senha */}
               <View className="area-texto flex-row items-center p-1 mt-4 border-gray-300">
                 <TextInput
                   placeholder="Digite sua senha"
@@ -179,7 +206,8 @@ export default function SignIn() {
                 </Text>
               )}
 
-              <View className="area-texto flex-row items-center mt-4 border border-gray-300">
+              {/* Confirmação de Senha */}
+              <View className="area-texto flex-row items-center p-1 mt-2 border-gray-300">
                 <TextInput
                   placeholder="Confirme sua senha"
                   placeholderTextColor="#6b7280"
@@ -194,18 +222,18 @@ export default function SignIn() {
                 />
               </View>
               {attemptedSubmit && !isConfirmPasswordValid && (
-                <Text className="text-red-500 text-xs mt-1 mb-3" style={{ fontFamily: 'Outfit_400Regular' }}>
-                  Confirme sua senha.
+                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
+                  Campo obrigatório.
                 </Text>
               )}
               {attemptedSubmit && isConfirmPasswordValid && !doPasswordsMatch && (
-                <Text className="text-red-500 text-xs mt-1 mb-3" style={{ fontFamily: 'Outfit_400Regular' }}>
+                <Text className="text-red-500 text-xs mt-1" style={{ fontFamily: 'Outfit_400Regular' }}>
                   As senhas não coincidem.
                 </Text>
               )}
             </View>
 
-            <Text className="text-center text-gray-500" style={{ fontFamily: 'Outfit_400Regular' }}>
+            <Text className="text-center text-gray-500 mt-4" style={{ fontFamily: 'Outfit_400Regular' }}>
               Já possui uma conta?{' '}
               <Text
                 className="text-yellow-500 font-bold"
