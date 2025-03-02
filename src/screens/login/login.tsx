@@ -86,28 +86,29 @@ export default function Login() {
       useNativeDriver: true,
     }).start();
   };
-  const [loginMessage, setLoginMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);;
 
-  const apiUrl = "http://192.168.15.120:3000"
+  const [loginMessage, setLoginMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const apiUrl = "http://192.168.15.120:3000";
   const handleLogin = async () => {
     if (!isFormValid) {
       setAttemptedSubmit(true);
       return;
     }
-  
+
     try {
       const response = await axios.post(`${apiUrl}/auth/login`, {
         email: email.trim(),
         hashPassword,
       });
-  
+
       const { message, token } = response.data;
-  
+
       await AsyncStorage.setItem('authToken', token);
-  
+
       setLoginMessage(message);
-      setIsSuccess(true); 
+      setIsSuccess(true);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.error('Erro ao fazer login:', error.response?.data || error.message);
@@ -119,13 +120,10 @@ export default function Login() {
         console.error('Erro desconhecido:', error);
         setLoginMessage('Erro desconhecido ao fazer login.');
       }
-  
+
       setIsSuccess(false);
     }
   };
-  
-  
-  
 
   if (!fontsLoaded) {
     return (
@@ -236,13 +234,16 @@ export default function Login() {
           )}
         </View>
         <View className="mt-8 w-full px-8">
-        {loginMessage !== '' && (
-          <View className={`p-3 rounded-lg ${isSuccess ? 'bg-green-200' : 'bg-red-200'}`}>
-            <Text className={`${isSuccess ? 'text-green-700' : 'text-red-700'} text-center`} style={{ fontFamily: 'Outfit_400Regular' }}>
-              {loginMessage}
-            </Text>
-          </View>
-        )}
+          {loginMessage !== '' && (
+            <View className={`p-3 rounded-lg ${isSuccess ? 'bg-green-200' : 'bg-red-200'}`}>
+              <Text
+                className={`${isSuccess ? 'text-green-700' : 'text-red-700'} text-center`}
+                style={{ fontFamily: 'Outfit_400Regular' }}
+              >
+                {loginMessage}
+              </Text>
+            </View>
+          )}
           <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
             <Pressable
               onPressIn={handlePressIn}
