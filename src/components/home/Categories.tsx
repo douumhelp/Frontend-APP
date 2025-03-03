@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 type Category = {
   id: number;
@@ -16,14 +16,14 @@ type CategoriesProps = {
 export function Categories({ data, fontRegular }: CategoriesProps) {
   return (
     <View className="mt-4">
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="px-4">
         {data.map((cat) => (
           <Pressable
             key={cat.id}
-            className="w-20 h-20 m-1 bg-white border border-gray-300 rounded-lg items-center justify-center"
+            className="w-20 h-20 m-2 bg-white border border-gray-400 rounded-lg items-center justify-center"
             onPress={() => console.log(`Clicou em ${cat.name}`)}
           >
-            <MaterialIcons name={cat.icon as any} size={24} color="#FACC15" />
+            <FontAwesome5 name={cat.icon} size={24} color="#FACC15" />
             <Text className="text-xs mt-1 text-center text-black" style={{ fontFamily: fontRegular }}>
               {cat.name}
             </Text>
