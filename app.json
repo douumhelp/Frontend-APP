@@ -1,12 +1,20 @@
 {
-    "expo": {
-      "plugins": [
-        [
-          "expo-router",
-          {
-            "root": "./src/routes"
-          }
-        ]
+  "expo": {
+    "scheme": "meuapp",
+    "newArchEnabled": true,
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "root": "./src/routes"
+        }
       ]
+    ],
+    "android": {
+      "package": "com.seunome.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.seunome.app"
     }
+  }
 }

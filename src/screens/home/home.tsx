@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ScrollView, Text, ActivityIndicator } from 'react-native';
+import { ScrollView, Text, ActivityIndicator, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts, Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit';
 import { Navbar } from '../../components/home/Navbar';
 import { Carrosel } from '../../components/home/Carrosel';
@@ -26,8 +27,8 @@ export default function Home() {
     );
   }
 
-  return (
-    <View className="flex-1 bg-gray-100">
+  return (   
+    <SafeAreaView className="flex-1 bg-gray-100">
       <Navbar address={address} fontRegular={fontRegular} fontBold={fontBold} />
       <ScrollView>
         <Carrosel />
@@ -51,6 +52,6 @@ export default function Home() {
           </Text>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

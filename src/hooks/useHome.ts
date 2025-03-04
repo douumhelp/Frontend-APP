@@ -7,16 +7,18 @@ export function useHome() {
     code: 'HELP25',
     discount: '15% OFF',
   });
+
+  // Ajuste aqui os ícones para nomes do Font Awesome
   const [categories] = useState([
-    { id: 1, name: 'Elétrica', icon: 'bolt' },
-    { id: 2, name: 'Mecânica', icon: 'build' },
-    { id: 3, name: 'Serviço Geral', icon: 'handyman' },
-    { id: 4, name: 'Pinturas', icon: 'format-paint' },
-    { id: 5, name: 'Hidráulica', icon: 'water' },
-    { id: 6, name: 'Montagem de Móveis', icon: 'home-repair-service' },
-    { id: 7, name: 'Jardinagem', icon: 'yard' },
+    { id: 1, name: 'Elétrica', icon: 'bolt' },          // FontAwesome5: bolt
+    { id: 2, name: 'Mecânica', icon: 'cogs' },          // FontAwesome5: cogs
+    { id: 3, name: 'Serviço Geral', icon: 'tasks' },    // FontAwesome5: tasks
+    { id: 4, name: 'Pinturas', icon: 'paint-brush' },   // FontAwesome5: paint-brush
+    { id: 5, name: 'Hidráulica', icon: 'tint' },        // FontAwesome5: tint
+    { id: 6, name: 'Montagem de Móveis', icon: 'hammer' }, // FontAwesome5: hammer
+    { id: 7, name: 'Jardinagem', icon: 'leaf' },        // FontAwesome5: leaf
   ]);
-  
+
   const [rankingPrestadores] = useState([
     {
       id: 1,
@@ -37,7 +39,7 @@ export function useHome() {
       image: require('../assets/image.png'),
     },
   ]);
-  
+
   const [campaignBanner] = useState({
     title: 'BANNER DE CAMPANHA',
     coupon: 'CUPOM',

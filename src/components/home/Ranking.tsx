@@ -29,21 +29,21 @@ export function RankingPrestador({ data, fontRegular, fontBold }: RankingPrestad
       duration={700}
       className="mt-4 mx-4 bg-white rounded-lg p-4"
     >
-      <View className="flex-row items-center mb-2">
+      <View className="flex-row items-center mb-3">
         <FontAwesome5 name="trophy" size={20} color="#FFD700" className="mr-2" />
         <Text className="text-black text-lg" style={{ fontFamily: fontBold }}>
           Melhores Prestadores do Mês
         </Text>
       </View>
 
-      <View className="flex-row justify-between">
+      <View className="flex-row justify-around">
         {data.map((prestador, index) => {
           const { icon, color } = placeIcons[index] || { icon: 'medal', color: '#888' };
 
           return (
             <View
               key={prestador.id}
-              className="bg-white rounded-lg items-center p-2 shadow w-24 h-40"
+              className="bg-white rounded-lg items-center p-2 shadow w-28 h-40"
             >
               <Image
                 source={prestador.image}
