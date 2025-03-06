@@ -10,9 +10,10 @@ import {
 import Carrosel1 from '../../assets/Carrosel1.png';
 import Carrosel2 from '../../assets/Carrosel2.png';
 import Carrosel3 from '../../assets/Carrosel3.png';
+import Carrosel4 from '../../assets/Carrosel4.png';
 
 export function Carrosel() {
-  const images = [Carrosel1, Carrosel2, Carrosel3];
+  const images = [Carrosel4,Carrosel1, Carrosel3,Carrosel2];
   const scrollRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { width } = Dimensions.get('window');
