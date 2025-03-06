@@ -7,18 +7,79 @@ export function useHome() {
     code: 'HELP25',
     discount: '15% OFF',
   });
-
-  // Ajuste aqui os ícones para nomes do Font Awesome
   const [categories] = useState([
-    { id: 1, name: 'Elétrica', icon: 'bolt' },          // FontAwesome5: bolt
-    { id: 2, name: 'Mecânica', icon: 'cogs' },          // FontAwesome5: cogs
-    { id: 3, name: 'Serviço Geral', icon: 'tasks' },    // FontAwesome5: tasks
-    { id: 4, name: 'Pinturas', icon: 'paint-brush' },   // FontAwesome5: paint-brush
-    { id: 5, name: 'Hidráulica', icon: 'tint' },        // FontAwesome5: tint
-    { id: 6, name: 'Montagem de Móveis', icon: 'hammer' }, // FontAwesome5: hammer
-    { id: 7, name: 'Jardinagem', icon: 'leaf' },        // FontAwesome5: leaf
+    { id: 1, name: 'Serviço Doméstico', icon: 'home', faIcon: 'home' },
+    { id: 2, name: 'Serviços de Sofware', icon: 'code', faIcon: 'code' },
+    { id: 3, name: 'Serviço online', icon: 'globe', faIcon: 'globe' },
+    { id: 4, name: 'Serviço veicular', icon: 'car', faIcon: 'car' },
+    { id: 5, name: 'Serviço de Pet', icon: 'paw', faIcon: 'paw' },
+    { id: 6, name: 'Serviço humano', icon: 'user', faIcon: 'user' },
+    { id: 7, name: 'Serviços Comercial', icon: 'store', faIcon: 'store' },
+    { id: 8, name: 'Outros', icon: 'ellipsis-h', faIcon: 'ellipsis-h' },
   ]);
-
+  const [subcategories] = useState([
+    { id: 1, name: 'Encanador', icon: 'wrench' },
+    { id: 2, name: 'Programação Front End', icon: 'laptop-code' },
+    { id: 3, name: 'Editor de Video', icon: 'film' },
+    { id: 4, name: 'Mecanico De Carro', icon: 'tools' },
+    { id: 5, name: 'Cuidador de Pet', icon: 'paw' },
+    { id: 6, name: 'Cuidador de Idosos', icon: 'user-nurse' },
+    { id: 7, name: 'Vendedor', icon: 'shopping-bag' },
+    { id: 8, name: 'Outros', icon: 'ellipsis-h' },
+    { id: 9, name: 'Eletricista', icon: 'bolt' },
+    { id: 10, name: 'Programador Backend', icon: 'server' },
+    { id: 11, name: 'Editor de Imagem', icon: 'image' },
+    { id: 12, name: 'Manobrista', icon: 'steering-wheel' },
+    { id: 13, name: 'Hospedagem de Pet', icon: 'bed' },
+    { id: 14, name: 'Cuidador de criança', icon: 'child' },
+    { id: 15, name: 'Diarista Comercial', icon: 'broom' },
+    { id: 16, name: 'Pintor', icon: 'paint-brush' },
+    { id: 17, name: 'Gestão de Projeto', icon: 'tasks' },
+    { id: 18, name: 'Redator', icon: 'pen' },
+    { id: 19, name: 'Eletrica Mecanica', icon: 'cogs' },
+    { id: 20, name: 'Vacinação de Pet', icon: 'syringe' },
+    { id: 21, name: 'Professor Ensino Fundamental I', icon: 'chalkboard-teacher' },
+    { id: 22, name: 'Segurança', icon: 'shield-alt' },
+    { id: 23, name: 'Pedreiro', icon: 'hard-hat' },
+    { id: 24, name: 'Suporte em TI', icon: 'headset' },
+    { id: 25, name: 'Media Design', icon: 'palette' },
+    { id: 26, name: 'Mecanico de Moto', icon: 'motorcycle' },
+    { id: 27, name: 'Adestrador', icon: 'dog' },
+    { id: 28, name: 'Professor Ensino Fundamental II', icon: 'chalkboard-teacher' },
+    { id: 29, name: 'Garçom', icon: 'concierge-bell' },
+    { id: 30, name: 'Diarista', icon: 'broom' },
+    { id: 31, name: 'Tester de Software', icon: 'bug' },
+    { id: 32, name: 'Filmagem (Cameraman)', icon: 'camera' },
+    { id: 33, name: 'Gasolina (pessoa que da um help levando gasolina no galão)', icon: 'gas-pump' },
+    { id: 34, name: 'Tosador', icon: 'scissors' },
+    { id: 35, name: 'Professor Ensino Médio', icon: 'chalkboard-teacher' },
+    { id: 36, name: 'Cozinheiro', icon: 'utensils' },
+    { id: 37, name: 'Jardinagem', icon: 'seedling' },
+    { id: 38, name: 'Analista de Software', icon: 'desktop' },
+    { id: 39, name: 'Audio', icon: 'headphones' },
+    { id: 40, name: 'Professor Ensino Faculdade', icon: 'graduation-cap' },
+    { id: 41, name: 'Tradutor', icon: 'language' },
+    { id: 42, name: 'Design de Interiores', icon: 'ruler' },
+    { id: 43, name: 'Cosultor de Software', icon: 'user-tie' },
+    { id: 44, name: 'Cuidador de pessoa com Deficiencia', icon: 'wheelchair' },
+    { id: 45, name: 'Fotografo', icon: 'camera-retro' },
+    { id: 46, name: 'Instalador de eletronicos (Antena, Tv a cabo)', icon: 'tv' },
+    { id: 47, name: 'Personal Training', icon: 'dumbbell' },
+    { id: 48, name: 'Contador', icon: 'calculator' },
+    { id: 49, name: 'Carpinteiro', icon: 'hammer' },
+    { id: 50, name: 'Acompanhante', icon: 'user-friends' },
+    { id: 51, name: 'Produtor de Festa', icon: 'glass-cheers' },
+  ]);
+  const categoryToSubIds: Record<number, number[]> = {
+    1: [1, 9, 16, 23, 30, 37, 42, 46, 49],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+    7: [],
+    8: [],
+  };
   const [rankingPrestadores] = useState([
     {
       id: 1,
@@ -39,16 +100,16 @@ export function useHome() {
       image: require('../assets/image.png'),
     },
   ]);
-
   const [campaignBanner] = useState({
     title: 'BANNER DE CAMPANHA',
     coupon: 'CUPOM',
   });
-
   return {
     address,
     promoBanner,
     categories,
+    subcategories,
+    categoryToSubIds,
     rankingPrestadores,
     campaignBanner,
   };

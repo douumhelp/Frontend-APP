@@ -2,14 +2,15 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { FontAwesome } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 type ButtomHelpProps = {
   onPress: () => void;
   fontRegular?: string;
   fontBold?: string;
 };
-
 export function ButtomHelp({ onPress, fontRegular, fontBold }: ButtomHelpProps) {
+  const router = useRouter();
   return (
     <Animatable.View
       animation="fadeInUp"
@@ -30,7 +31,7 @@ export function ButtomHelp({ onPress, fontRegular, fontBold }: ButtomHelpProps) 
           shadowRadius: 4,
           elevation: 4
         }}
-        onPress={onPress}
+        onPress={() => router.push('requisicao')}
       >
         <FontAwesome name="handshake-o" size={20} color="black" />
         <Text style={{ color: 'black', fontSize: 16, marginLeft: 8, fontFamily: fontBold }}>
