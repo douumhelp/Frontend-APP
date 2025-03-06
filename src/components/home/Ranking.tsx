@@ -43,11 +43,11 @@ export function RankingPrestador({ data, fontRegular, fontBold }: RankingPrestad
           return (
             <View
               key={prestador.id}
-              className="bg-white rounded-lg items-center p-2 shadow w-28 h-40"
+              className="bg-white rounded-lg items-center p-2 shadow w-28 h-43"
             >
               <Image
                 source={prestador.image}
-                className="w-12 h-12 rounded-full mb-2"
+                className="w-12 h-12 rounded-full mb-1"
               />
 
               <Text

@@ -42,7 +42,7 @@ export function Carrosel() {
 
   return (
     <View
-      className="mt-4 mx-4 rounded-lg overflow-hidden"
+      className="mt-2 mx-4 rounded-lg overflow-hidden"
       style={{ width: carouselWidth, height: CAROUSEL_HEIGHT }}
     >
       <ScrollView
@@ -71,7 +71,7 @@ export function Carrosel() {
           </View>
         ))}
       </ScrollView>
-      <View className="absolute bottom-2 left-0 right-0 flex-row justify-center">
+      <View className="absolute bottom-1 left-0 right-0 flex-row justify-center">
         {images.map((_, i) => (
           <View
             key={i}

@@ -6,6 +6,7 @@ import { useFonts, Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/
 import axios from 'axios';
 import { AxiosError } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { apiUrl } from 'src/api/apiconfig';
 
 // Função para aplicar máscara CPF: 000.000.000-00
 const cpfMask = (value: string): string => {
@@ -90,25 +91,31 @@ export default function Login() {
   const [loginMessage, setLoginMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const apiUrl = "http://192.168.15.120:3000";
   const handleLogin = async () => {
     if (!isFormValid) {
       setAttemptedSubmit(true);
       return;
     }
-
+  
     try {
-      const response = await axios.post(`${apiUrl}/auth/login`, {
-        email: email.trim(),
-        hashPassword,
-      });
-
+      // Cria o payload dinamicamente com base no input
+      const payload: { email?: string; cpf?: string; hashPassword: string } = { hashPassword };
+  
+      if (/[a-zA-Z]/.test(email.trim())) {
+        // Se houver letras, trata como email e envia com o campo "login"
+        payload.email = email.trim();
+      } else {
+        // Caso contrário, trata como CPF (remove máscara) e envia com o campo "cpf"
+        payload.cpf = email.replace(/\D/g, '');
+      }
+  
+      const response = await axios.post(`${apiUrl}/auth/login`, payload);
       const { message, token } = response.data;
-
+  
       await AsyncStorage.setItem('authToken', token);
-
       setLoginMessage(message);
       setIsSuccess(true);
+      router.push('home');
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         console.error('Erro ao fazer login:', error.response?.data || error.message);
@@ -120,10 +127,14 @@ export default function Login() {
         console.error('Erro desconhecido:', error);
         setLoginMessage('Erro desconhecido ao fazer login.');
       }
-
       setIsSuccess(false);
     }
   };
+  
+  
+  
+
+  
 
   if (!fontsLoaded) {
     return (

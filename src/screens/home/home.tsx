@@ -32,7 +32,7 @@ export default function Home() {
       <Navbar address={address} fontRegular={fontRegular} fontBold={fontBold} />
       <ScrollView>
         <Carrosel />
-        <Categories data={categories} fontRegular={fontRegular} />
+        <Categories />
         <RankingPrestador
           data={rankingPrestadores}
           fontRegular={fontRegular}
