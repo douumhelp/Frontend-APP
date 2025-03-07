@@ -50,7 +50,7 @@ export function useHome() {
     { id: 30, name: 'Diarista', icon: 'broom' },
     { id: 31, name: 'Tester de Software', icon: 'bug' },
     { id: 32, name: 'Filmagem (Cameraman)', icon: 'camera' },
-    { id: 33, name: 'Gasolina (pessoa que da um help levando gasolina no galão)', icon: 'gas-pump' },
+    { id: 33, name: 'Gasolina (Acabou na Estrada)', icon: 'gas-pump' },
     { id: 34, name: 'Tosador', icon: 'scissors' },
     { id: 35, name: 'Professor Ensino Médio', icon: 'chalkboard-teacher' },
     { id: 36, name: 'Cozinheiro', icon: 'utensils' },

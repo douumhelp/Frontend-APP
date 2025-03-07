@@ -4,35 +4,36 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useNotification } from '../../context/NotificationContext';
+import { useHome } from '../../hooks/useHome';
 
 type NavbarProps = {
-  address: string;
   fontRegular?: string;
   fontBold?: string;
 };
 
-export function Navbar({ address, fontRegular, fontBold }: NavbarProps) {
+export function Navbar({ fontRegular, fontBold }: NavbarProps) {
   const router = useRouter();
   const { unreadCount } = useNotification();
+  const { address } = useHome();
 
   return (
     <>
-      {/* SafeAreaView para garantir a área segura, com fundo branco */}
       <SafeAreaView className="bg-white">
         <StatusBar style="dark" translucent />
       </SafeAreaView>
-      {/* Container principal da Navbar */}
       <View className="flex-row items-center justify-between px-4 py-2 bg-white shadow-md">
         <Pressable className="p-2">
           <FontAwesome5 name="bars" size={20} color="black" />
         </Pressable>
 
-        <Text
-          className="text-base text-black"
-          style={fontBold ? { fontFamily: fontBold } : {}}
-        >
-          {address}
-        </Text>
+        <Pressable onPress={() => router.push('adresses')}>
+          <Text
+            className="text-base text-black"
+            style={fontBold ? { fontFamily: fontBold } : {}}
+          >
+            {address}
+          </Text>
+        </Pressable>
 
         <View className="flex-row">
           <Pressable
@@ -47,7 +48,8 @@ export function Navbar({ address, fontRegular, fontBold }: NavbarProps) {
             )}
           </Pressable>
 
-          <Pressable className="p-2">
+          <Pressable className="p-2"
+          onPress={() => router.push('perfil')}>  
             <FontAwesome5 name="user" size={20} color="black" />
           </Pressable>
         </View>
