@@ -8,6 +8,8 @@ import { Categories } from '../../components/home/Categories';
 import { RankingPrestador } from '../../components/home/Ranking';
 import { ButtomHelp } from '../../components/home/ButtomHelp';
 import { useHome } from '../../hooks/useHome';
+import { ButtonFab } from '../../components/home/ButtonFab'; // Importação do FAB
+import { usePathname } from 'expo-router'; // Importar para checar a rota atual
 
 export default function Home() {
   const [fontsLoaded] = useFonts({
@@ -19,6 +21,8 @@ export default function Home() {
   const fontRegular = 'Outfit_400Regular';
   const fontBold = 'Outfit_700Bold';
 
+  const pathname = usePathname(); // Obtém a rota atual
+
   if (!fontsLoaded) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -28,8 +32,8 @@ export default function Home() {
   }
 
   return (   
-    <SafeAreaView className="flex-1 bg-gray-100">
-      <Navbar address={address} fontRegular={fontRegular} fontBold={fontBold} />
+    <SafeAreaView className="flex-1 bg-gray-100 relative">
+      <Navbar  />
       <ScrollView>
         <Carrosel />
         <Categories />
@@ -52,6 +56,9 @@ export default function Home() {
           </Text>
         </View>
       </ScrollView>
+
+      
+      {pathname === '/home' && <ButtonFab />}
     </SafeAreaView>
   );
 }
