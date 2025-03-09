@@ -8,8 +8,8 @@ import { Categories } from '../../components/home/Categories';
 import { RankingPrestador } from '../../components/home/Ranking';
 import { ButtomHelp } from '../../components/home/ButtomHelp';
 import { useHome } from '../../hooks/useHome';
-import { ButtonFab } from '../../components/home/ButtonFab'; // Importação do FAB
-import { usePathname } from 'expo-router'; // Importar para checar a rota atual
+import { ButtonFab } from '../../components/home/ButtonFab';
+import { usePathname } from 'expo-router';
 
 export default function Home() {
   const [fontsLoaded] = useFonts({
@@ -20,8 +20,7 @@ export default function Home() {
   const { address, categories, rankingPrestadores, campaignBanner } = useHome();
   const fontRegular = 'Outfit_400Regular';
   const fontBold = 'Outfit_700Bold';
-
-  const pathname = usePathname(); // Obtém a rota atual
+  const pathname = usePathname();
 
   if (!fontsLoaded) {
     return (
@@ -33,7 +32,11 @@ export default function Home() {
 
   return (   
     <SafeAreaView className="flex-1 bg-gray-100 relative">
-      <Navbar  />
+      <Navbar
+        fontRegular={fontRegular}
+        fontBold={fontBold}
+      />
+      
       <ScrollView>
         <Carrosel />
         <Categories />
@@ -47,6 +50,7 @@ export default function Home() {
           fontRegular={fontRegular}
           fontBold={fontBold}
         />
+        
         <View className="mx-4 mt-6 p-4 bg-white rounded-lg items-center">
           <Text className="text-lg mb-2 text-black" style={{ fontFamily: fontBold }}>
             {campaignBanner.title}
@@ -57,7 +61,6 @@ export default function Home() {
         </View>
       </ScrollView>
 
-      
       {pathname === '/home' && <ButtonFab />}
     </SafeAreaView>
   );
