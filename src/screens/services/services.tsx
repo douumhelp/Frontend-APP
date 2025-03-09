@@ -36,7 +36,7 @@ export default function ServicesScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white p-4">
-      <Text className="text-2xl font-bold mb-4" style={{ fontFamily: 'Outfit_700Bold' }}>
+      <Text className="text-2xl font-bold mb-4 mt-10" style={{ fontFamily: 'Outfit_700Bold' }}>
         Meus Serviços
       </Text>
       {requests.length === 0 ? (

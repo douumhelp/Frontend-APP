@@ -4,8 +4,8 @@ import { View, Text, StyleSheet } from 'react-native';
 
 const ChatScreen = () => {
     return (
-        <View>
-            <Text >Chat Screen</Text>
+        <View className='mt-10'>
+            <Text >Tela em Construção</Text>
         </View>
     );
 };
