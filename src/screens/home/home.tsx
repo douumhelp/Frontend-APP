@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, ScrollView, Text, ActivityIndicator } from 'react-native';
+import { ScrollView, Text, ActivityIndicator, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts, Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit';
 import { Navbar } from '../../components/home/Navbar';
 import { Carrosel } from '../../components/home/Carrosel';
@@ -7,6 +8,8 @@ import { Categories } from '../../components/home/Categories';
 import { RankingPrestador } from '../../components/home/Ranking';
 import { ButtomHelp } from '../../components/home/ButtomHelp';
 import { useHome } from '../../hooks/useHome';
+import { ButtonFab } from '../../components/home/ButtonFab';
+import { usePathname } from 'expo-router';
 
 export default function Home() {
   const [fontsLoaded] = useFonts({
@@ -17,6 +20,7 @@ export default function Home() {
   const { address, categories, rankingPrestadores, campaignBanner } = useHome();
   const fontRegular = 'Outfit_400Regular';
   const fontBold = 'Outfit_700Bold';
+  const pathname = usePathname();
 
   if (!fontsLoaded) {
     return (
@@ -26,12 +30,16 @@ export default function Home() {
     );
   }
 
-  return (
-    <View className="flex-1 bg-gray-100">
-      <Navbar address={address} fontRegular={fontRegular} fontBold={fontBold} />
+  return (   
+    <SafeAreaView className="flex-1 bg-gray-100 relative">
+      <Navbar
+        fontRegular={fontRegular}
+        fontBold={fontBold}
+      />
+      
       <ScrollView>
         <Carrosel />
-        <Categories data={categories} fontRegular={fontRegular} />
+        <Categories />
         <RankingPrestador
           data={rankingPrestadores}
           fontRegular={fontRegular}
@@ -42,6 +50,7 @@ export default function Home() {
           fontRegular={fontRegular}
           fontBold={fontBold}
         />
+        
         <View className="mx-4 mt-6 p-4 bg-white rounded-lg items-center">
           <Text className="text-lg mb-2 text-black" style={{ fontFamily: fontBold }}>
             {campaignBanner.title}
@@ -51,6 +60,8 @@ export default function Home() {
           </Text>
         </View>
       </ScrollView>
-    </View>
+
+      {pathname === '/home' && <ButtonFab />}
+    </SafeAreaView>
   );
 }

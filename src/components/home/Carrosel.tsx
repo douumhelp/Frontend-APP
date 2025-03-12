@@ -10,9 +10,10 @@ import {
 import Carrosel1 from '../../assets/Carrosel1.png';
 import Carrosel2 from '../../assets/Carrosel2.png';
 import Carrosel3 from '../../assets/Carrosel3.png';
+import Carrosel4 from '../../assets/Carrosel4.png';
 
 export function Carrosel() {
-  const images = [Carrosel1, Carrosel2, Carrosel3];
+  const images = [Carrosel4,Carrosel1, Carrosel3,Carrosel2];
   const scrollRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const { width } = Dimensions.get('window');
@@ -42,7 +43,7 @@ export function Carrosel() {
 
   return (
     <View
-      className="mt-4 mx-4 rounded-lg overflow-hidden"
+      className="mt-2 mx-4 rounded-lg overflow-hidden"
       style={{ width: carouselWidth, height: CAROUSEL_HEIGHT }}
     >
       <ScrollView
@@ -71,7 +72,7 @@ export function Carrosel() {
           </View>
         ))}
       </ScrollView>
-      <View className="absolute bottom-2 left-0 right-0 flex-row justify-center">
+      <View className="absolute bottom-1 left-0 right-0 flex-row justify-center">
         {images.map((_, i) => (
           <View
             key={i}
