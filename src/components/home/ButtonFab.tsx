@@ -17,7 +17,7 @@ export function ButtonFab() {
   if (!fontsLoaded) {
     return null;
   }
-
+// teste
   return (
     <View className="absolute bottom-6 right-6 z-50" pointerEvents="box-none">
       <Portal>
