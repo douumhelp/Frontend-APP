@@ -6,7 +6,6 @@ import io from 'socket.io-client';
 export interface ServiceRequest {
   id: number;
   address: string;
-  subcategoryId: number;
   serviceName: string;
   date: string; // formato "YYYY-MM-DD"
   time: '8:00' | '11:00' | '13:00' | '14:00' | '16:00' | '17:00';
