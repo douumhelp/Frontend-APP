@@ -11,10 +11,14 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useFonts, Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit';
 import { FontAwesome5 } from '@expo/vector-icons';
+import axios from 'axios';
+import { apiUrl } from 'src/api/apiconfig';
 
 const cpfMask = (value: string): string =>
   value
@@ -50,6 +54,17 @@ export default function CadastroPart2() {
     Outfit_700Bold,
   });
   const router = useRouter();
+  
+  const params = useLocalSearchParams() as {
+    name?: string;
+    surname?: string;
+    email?: string;
+    password?: string;
+    phone?: string;
+  };
+  
+  const { name, surname, email, password, phone } = params;
+
   const [cpf, setCpf] = useState<string>('');
   const [accepted, setAccepted] = useState<boolean>(false);
   const [attemptedSubmit, setAttemptedSubmit] = useState<boolean>(false);
@@ -71,12 +86,32 @@ export default function CadastroPart2() {
   const isCpfValid = validateCPF(cpf);
   const isFormValid = isCpfValid && accepted;
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!isFormValid) {
       setAttemptedSubmit(true);
       return;
     }
-    router.push('home');
+    
+    // Monta o objeto de registro utilizando os dados passados e o CPF digitado nesta etapa
+    const registrationData = {
+      firstName: name || '',      // valor vindo da tela SignIn
+      lastName: surname || '',     // valor vindo da tela SignIn
+      email: email || '',          // valor vindo da tela SignIn
+      hashPassword: password || '',// valor vindo da tela SignIn
+      telephone: phone || '',      // valor vindo da tela SignIn
+      cpf: cpf.replace(/\D/g, ''),  // CPF sem máscara
+    };
+
+    try {
+      const response = await axios.post(`${apiUrl}/auth/register/pf`, registrationData);
+      
+      // Exibe um pop-up informando que o cadastro foi realizado com sucesso
+      Alert.alert("Sucesso", "Cadastro realizado com sucesso!", [
+        { text: "OK", onPress: () => router.push('home') },
+      ]);
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível realizar o cadastro. Tente novamente.");
+    }
   };
 
   if (!fontsLoaded) {
@@ -99,6 +134,7 @@ export default function CadastroPart2() {
         <SafeAreaView className="flex-1 bg-white px-4">
           <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
             <View className="flex-1 w-full justify-between">
+              {/* Conteúdo da tela (CPF, Termos, etc.) */}
               <View className="mt-4">
                 <View className="flex-row items-center">
                   <FontAwesome5
@@ -168,7 +204,7 @@ export default function CadastroPart2() {
                       <FontAwesome5 name="square" size={24} color="#ccc" className="mr-2" />
                     )}
                     <Text className="text-base text-black" style={{ fontFamily: 'Outfit_400Regular' }}>
-                    Estou Ciente e Aceito os Termos e Condições da Empresa
+                      Estou Ciente e Aceito os Termos e Condições da Empresa
                     </Text>
                   </Pressable>
                 </View>

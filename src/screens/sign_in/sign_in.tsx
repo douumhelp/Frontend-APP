@@ -64,7 +64,10 @@ export default function SignIn() {
       setAttemptedSubmit(true);
       return;
     }
-    router.push('sign_2');
+    router.push({
+      pathname: 'sign_2',
+      params: { name, surname, phone, email, password }
+    });
   };
 
   if (!fontsLoaded) {

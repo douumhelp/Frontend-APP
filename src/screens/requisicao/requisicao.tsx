@@ -19,9 +19,10 @@ import { useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFonts, Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit';
 import { FontAwesome } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useHome } from '../../hooks/useHome';
 import { useServices } from '../../context/ServicesContext';
-import { useSearchParams } from '../../hooks/UseCategories';
+import { apiUrl } from 'src/api/apiconfig';
 
 interface Address {
   id: number;
@@ -36,12 +37,16 @@ interface Address {
 export default function SolicitacaoServicoScreen() {
   const [fontsLoaded] = useFonts({ Outfit_400Regular, Outfit_700Bold });
   const router = useRouter();
-  const { subcategory } = useSearchParams();
-  const { address: defaultAddress, subcategories } = useHome();
+  const { address: defaultAddress } = useHome();
   const { createServiceRequest, requests } = useServices();
 
-  const [subcategoryId, setSubcategoryId] = useState<number | null>(null);
-  const [subcategoryName, setSubcategoryName] = useState('');
+  // Estado para categoria selecionada
+  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [categoryName, setCategoryName] = useState('');
+  // Estado para as categorias vindas do backend
+  const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
   const [serviceName, setServiceName] = useState('');
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -50,7 +55,7 @@ export default function SolicitacaoServicoScreen() {
   const [maxValue, setMaxValue] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Endereço padrão para teste
+  // Endereços (para teste)
   const [addresses, setAddresses] = useState<Address[]>([
     { id: 1, rua: 'Rua Bolsonaro', numero: '22', bairro: 'Centro', cep: '12345-678', cidade: 'Cidade Teste', estado: 'Teste' }
   ]);
@@ -58,22 +63,31 @@ export default function SolicitacaoServicoScreen() {
 
   const times = ['8:00', '11:00', '13:00', '14:00', '16:00', '17:00'] as const;
 
+  // Busca as categorias no backend utilizando o token de autenticação
   useEffect(() => {
-    if (subcategory) {
+    async function fetchCategories() {
       try {
-        const parsedSub = JSON.parse(subcategory);
-        if (parsedSub && parsedSub.id) {
-          setSubcategoryId(parsedSub.id);
-          setSubcategoryName(parsedSub.name);
+        const token = await AsyncStorage.getItem('authToken');
+        if (!token) throw new Error('Token not found');
+        const response = await fetch(`${apiUrl}/categories`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        setCategories(data);
+        if (data.length > 0) {
+          setCategoryId(data[0].id);
+          setCategoryName(data[0].name);
         }
       } catch (error) {
-        console.error('Erro na integração: subcategoria inválida.', error);
+        console.error('Error fetching categories:', error);
+      } finally {
+        setLoadingCategories(false);
       }
-    } else if (subcategories && subcategories.length > 0) {
-      setSubcategoryId(subcategories[0].id);
-      setSubcategoryName(subcategories[0].name);
     }
-  }, [subcategory, subcategories]);
+    fetchCategories();
+  }, []);
 
   const onChangeDate = (event: any, date?: Date) => {
     setShowDatePicker(false);
@@ -81,7 +95,7 @@ export default function SolicitacaoServicoScreen() {
   };
 
   async function handleSubmit() {
-    if (!subcategoryId || !serviceName || !selectedTime || !minValue || !maxValue) {
+    if (!categoryId || !serviceName || !selectedTime || !minValue || !maxValue) {
       Alert.alert('Atenção', 'Preencha todos os campos antes de agendar.');
       return;
     }
@@ -96,7 +110,7 @@ export default function SolicitacaoServicoScreen() {
 
     const newRequest = {
       address: finalAddress,
-      subcategoryId,
+      categoryId,
       serviceName,
       date: selectedDate.toISOString().split('T')[0],
       time: selectedTime,
@@ -118,7 +132,7 @@ export default function SolicitacaoServicoScreen() {
     return requests.some(req => req.date === formattedDate && req.time === time);
   };
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || loadingCategories) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-white">
         <ActivityIndicator size="large" color="#FFD700" />
@@ -138,7 +152,7 @@ export default function SolicitacaoServicoScreen() {
             contentContainerStyle={{ flexGrow: 1, paddingBottom: 20 }}
             keyboardShouldPersistTaps="handled"
           >
-            <TouchableOpacity onPress={() => router.back()} style={{ marginLeft: 10, marginBottom: 10, marginTop: 30 }}>  
+            <TouchableOpacity onPress={() => router.back()} style={{ marginLeft: 10, marginBottom: 10, marginTop: 30 }}>
               <FontAwesome name="arrow-left" size={30} color="#FFD700" />
             </TouchableOpacity>
             <View className="p-4">
@@ -182,16 +196,16 @@ export default function SolicitacaoServicoScreen() {
               <Text className="font-bold mt-2" style={{ fontFamily: 'Outfit_700Bold' }}>Categoria</Text>
               <View className="border border-gray-300 rounded mb-2">
                 <Picker
-                  selectedValue={subcategoryId}
+                  selectedValue={categoryId}
                   onValueChange={(itemValue) => {
-                    setSubcategoryId(itemValue);
-                    const selected = subcategories.find((sub) => sub.id === itemValue);
-                    setSubcategoryName(selected?.name || '');
+                    setCategoryId(itemValue);
+                    const selected = categories.find((cat) => cat.id === itemValue);
+                    setCategoryName(selected?.name || '');
                   }}
                   style={{ fontFamily: 'Outfit_400Regular' }}
                 >
-                  {subcategories.map((subcat) => (
-                    <Picker.Item key={subcat.id} label={subcat.name} value={subcat.id} />
+                  {categories.map((cat) => (
+                    <Picker.Item key={cat.id} label={cat.name} value={cat.id} />
                   ))}
                 </Picker>
               </View>
